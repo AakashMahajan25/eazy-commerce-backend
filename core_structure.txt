@@ -1,0 +1,93 @@
+Folder PATH listing for volume OS
+Volume serial number is F87C-9740
+C:.
+ª   .env.example
+ª   .eslintrc.js
+ª   .gitignore
+ª   .prettierrc
+ª   package.json
+ª   README.md
+ª   structure.txt
+ª   
++---public
+ª   ª   robots.txt
+ª   ª   
+ª   +---assets
+ª       +---images
+ª       ª       .gitkeep
+ª       ª       
+ª       +---styles
+ª               .gitkeep
+ª               
++---scripts
+ª       build.ts
+ª       migrate.ts
+ª       start.ts
+ª       
++---src
+ª   ª   app.ts
+ª   ª   index.ts
+ª   ª   server.ts
+ª   ª   
+ª   +---api
+ª   ª   +---controllers
+ª   ª   ª       userController.ts
+ª   ª   ª       
+ª   ª   +---graphql
+ª   ª   ª   ª   context.ts
+ª   ª   ª   ª   
+ª   ª   ª   +---resolvers
+ª   ª   ª   ª       index.ts
+ª   ª   ª   ª       
+ª   ª   ª   +---schemas
+ª   ª   ª           index.ts
+ª   ª   ª           
+ª   ª   +---routes
+ª   ª           index.ts
+ª   ª           
+ª   +---config
+ª   ª   ª   database.ts
+ª   ª   ª   env.ts
+ª   ª   ª   redis.ts
+ª   ª   ª   
+ª   ª   +---nginx
+ª   ª           nginx.conf
+ª   ª           
+ª   +---middlewares
+ª   ª       authMiddleware.ts
+ª   ª       errorHandler.ts
+ª   ª       rateLimiter.ts
+ª   ª       
+ª   +---models
+ª   ª       index.ts
+ª   ª       sessionModel.ts
+ª   ª       userModel.ts
+ª   ª       
+ª   +---services
+ª   ª       authService.ts
+ª   ª       emailService.ts
+ª   ª       userService.ts
+ª   ª       
+ª   +---subscriptions
+ª   ª       index.ts
+ª   ª       userSubscription.ts
+ª   ª       
+ª   +---types
+ª   ª       custom.d.ts
+ª   ª       express.d.ts
+ª   ª       graphql.d.ts
+ª   ª       
+ª   +---utils
+ª           constants.ts
+ª           helper.ts
+ª           logger.ts
+ª           validator.ts
+ª           
++---tests
+    +---integration
+    ª       auth.test.ts
+    ª       user.test.ts
+    ª       
+    +---unit
+            authService.test.ts
+            userService.test.ts
