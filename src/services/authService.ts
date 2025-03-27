@@ -21,18 +21,18 @@ export const loginUser = async (email: string, password: string) => {
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken(payload);
 
-    await redisClient.setex(user.id.toString(), JWT_CONFIG.refreshTokenExpiry! ,refreshToken);
+    await redisClient.setex("refresh_token:" + user.id.toString(), JWT_CONFIG.refreshTokenExpiryNumerical! ,refreshToken);
 
     return { accessToken, refreshToken };
 }
 
 export const verifyRefreshToken = async (token: string) => {
     const decoded = jwt.verify(token, JWT_CONFIG.refreshTokenSecret) as { userId: string };
-    const storedToken = await redisClient.get(decoded.userId);
+    const storedToken = await redisClient.get("refresh_token:" + decoded.userId);
     if (storedToken !== token) throw new Error('Invalid refresh token');
     return decoded;
 };
 
 export const logoutUser = async (userId: string) => {
-    await redisClient.del(userId);
+    await redisClient.del("refresh_token:" + userId);
 };

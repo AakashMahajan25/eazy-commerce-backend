@@ -25,6 +25,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const refresh = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;
+    console.log(refreshToken);
     if (!refreshToken) return res.status(UNAUTHORIZED).json({ message: 'Missing refresh token'});
     const decoded = await authService.verifyRefreshToken(refreshToken);
     const newAccessToken = generateAccessToken({ userId: decoded.userId });

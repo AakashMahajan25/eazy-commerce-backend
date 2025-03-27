@@ -11,7 +11,10 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         const decoded = jwt.verify(token, JWT_CONFIG.accessTokenSecret);
         (req as any).user = decoded;
         next();
-    } catch {
+    } catch (error) {
+        console.log("Token is ", token);
+        console.log("secret", )
+        console.log("Error is ", error);
         return res.status(FORBIDDEN).json({ message: 'Forbidden'});
     }
 };
