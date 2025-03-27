@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { redisClient } from '@/config/redis';
-
+import { TOO_MANY_REQUESTS, INTERNAL_SERVER_ERROR } from '@/config/http'
 
 // Uses Sliding Window
 
@@ -19,7 +19,7 @@ const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
         const requestCount = await redisClient.zcard(redisKey);
 
         if (requestCount >= MAX_REQUESTS) {
-            return res.status(429).json({ error: "Too many requests, try again later!"});
+            return res.status(TOO_MANY_REQUESTS).json({ error: "Too many requests, try again later!"});
         } 
 
         await redisClient.zadd(redisKey, now.toString());
@@ -30,7 +30,7 @@ const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
 
     } catch (error) {
         console.error("Redis Error:", error);
-        res.status(500).json({error: "Internal Server Error"});
+        res.status(INTERNAL_SERVER_ERROR).json({error: "Internal Server Error"});
     }
 
 };

@@ -9,6 +9,7 @@ import helmet from 'helmet';
 import router from '@/api/routes';
 //middlewares
 import rateLimiter from '@/middlewares/rateLimiter'
+import { errorHandler } from './middlewares/errorHandler';
 // import { rateLimiter } from '@/middlewares/rateLimiter';
 // import { errorHandler } from '@/middlewares/errorHandler';
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(helmet());
 
 app.use(rateLimiter);
+app.use(errorHandler);
 
 app.use('/api', router);
 

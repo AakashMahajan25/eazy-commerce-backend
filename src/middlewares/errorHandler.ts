@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import logger from '@/utils/logger';
-import { NODE_ENV } from '@/config/env'
+import { NODE_ENV } from '@/config/env';
+import { INTERNAL_SERVER_ERROR } from '@/config/http'
 
 interface ErrorResponse {
     status?: number;
@@ -14,7 +15,7 @@ export const errorHandler = (
     res: Response,
     next: NextFunction
 ) => {
-    const statusCode = err.status || 500;
+    const statusCode = err.status || INTERNAL_SERVER_ERROR;
     const response: ErrorResponse = {
         message: err.message || 'Internal Server Error',
     };
