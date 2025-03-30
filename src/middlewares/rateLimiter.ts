@@ -22,7 +22,7 @@ const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
             return res.status(TOO_MANY_REQUESTS).json({ error: "Too many requests, try again later!"});
         } 
 
-        await redisClient.zadd(redisKey, now.toString());
+        await redisClient.zadd(redisKey, now.toString(), now.toString());
 
         await redisClient.expire(redisKey, WINDOW_SIZE);
 
