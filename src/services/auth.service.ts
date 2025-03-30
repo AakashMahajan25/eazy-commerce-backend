@@ -3,7 +3,7 @@ import { redisClient } from "@/config/redis";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { JWT_CONFIG } from "@/config/jwt";
-import { userModel } from "@/models/userModel";
+import { userModel } from "@/models/user.model";
 
 export const registerUser = async (name: string, email: string, password: string) => {
     const hashedPassword = await bcrypt.hash(password, 10);

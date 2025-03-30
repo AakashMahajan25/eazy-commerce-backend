@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as authService from '@/services/authService';
+import * as authService from '@/services/auth.service';
 import { UNAUTHORIZED, OK } from '@/config/http'
 import { generateAccessToken } from '@/utils/generateTokens';
 

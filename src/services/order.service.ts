@@ -1,4 +1,4 @@
-import { OrderModel } from "@/models/orderModel";
+import { OrderModel } from "@/models/order.model";
 
 const createOrder = async (userId: number, { products, totalAmount}: any) => {
     return await OrderModel.create({
