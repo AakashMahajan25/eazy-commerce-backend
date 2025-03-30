@@ -3,17 +3,17 @@ import { redisClient } from "@/config/redis";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import { JWT_CONFIG } from "@/config/jwt";
-import { prisma } from "@/config/database";
+import { userModel } from "@/models/userModel";
 
 export const registerUser = async (name: string, email: string, password: string) => {
     const hashedPassword = await bcrypt.hash(password, 10);
-    return prisma.user.create({
+    return userModel.create({
         data: {name, email, password: hashedPassword},
     });
 };
 
 export const loginUser = async (email: string, password: string) => {
-    const user = await prisma.user.findUnique({ where: { email }});
+    const user = await userModel.findUnique({ where: { email }});
     if (!user || !(await bcrypt.compare(password, user.password))) {
         throw new Error('Invalid email or password');
     }
