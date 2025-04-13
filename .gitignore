@@ -2,7 +2,7 @@
 /src/models/generated/
 /prisma/generated/
 
-
+dist
 
 //Generated Online
 # Logs
