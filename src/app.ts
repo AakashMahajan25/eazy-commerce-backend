@@ -3,14 +3,13 @@ import express from 'express';
 // import cors from 'cors';
 // import morgan from 'morgan';
 // import logger from '@/utils/logger';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 // import helmet from 'helmet';
 //routes
-// import router from '@/api/routes';
+import router from '@/api/routes';
 //middlewares
-import rateLimiter from '@/middlewares/rateLimiter'
+// import rateLimiter from '@/middlewares/rateLimiter'
 // import { errorHandler } from './middlewares/errorHandler';
-// import { rateLimiter } from '@/middlewares/rateLimiter';
 // import { errorHandler } from '@/middlewares/errorHandler';
 
 const app = express();
@@ -21,15 +20,15 @@ const app = express();
 //         write: (message) => logger.info(message.trim()),
 //     },
 // }));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // app.use(helmet());
 
-app.use(rateLimiter);
+// app.use(rateLimiter);
 // app.use(errorHandler);
 
-// app.use('/api', router);
+app.use('/api', router);
 
 
 //Health Check API
