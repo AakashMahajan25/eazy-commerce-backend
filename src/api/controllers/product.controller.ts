@@ -4,7 +4,13 @@ import { CREATED, OK } from "@/config/http";
 
 export const allProducts = async (req: Request, res: Response) => {
     const data = await productService.getAllProducts();
-    res.json({data});
+    res.status(OK).json({data});
+}
+
+export const oneProduct = async (req: Request, res: Response) => {
+    const { productId } = req.body;
+    const data = await productService.getOneProduct(productId);
+    res.status(OK).json({data})
 }
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -17,6 +23,12 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
     const { productId } = req.body;
-    await productService.deleteProduct(Number(productId));
+    await productService.deleteProduct(productId);
     res.status(OK).json({"message": "Product Deleted Successfully!"});
+}
+
+export const updateProduct = async (req: Request, res: Response) => {
+    const { productId, data } = req.body;
+    await productService.updateProduct(productId, data);
+    res.status(OK).json({"message": "Product Updated Successfully!"})
 }
