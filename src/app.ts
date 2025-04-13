@@ -1,3 +1,4 @@
+import { redisClient } from './config/redis';
 //npm packages
 import express from 'express';
 // import cors from 'cors';
@@ -36,5 +37,20 @@ app.get('/health-check', (req, res) => {
         status: 'ok'
     });
 });
+//Redis Cron Job API
+app.get('/redis-cron-job', async (req, res) => {
+    try {
+        const value = await redisClient.get("key");
+        res.json({
+            status: 'success',
+            data: value
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to fetch data from Redis'
+        });
+    }
+})
 
 export default app;
