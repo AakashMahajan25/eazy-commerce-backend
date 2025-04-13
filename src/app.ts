@@ -30,7 +30,6 @@ app.use(cookieParser());
 
 app.use('/api', router);
 
-
 //Health Check API
 app.get('/health-check', (req, res) => {
     res.json({
