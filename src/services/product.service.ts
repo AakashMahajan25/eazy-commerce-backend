@@ -21,7 +21,7 @@ export const createProduct = async (name: string, slug: string, description: str
 };
 
 export const deleteProduct = async (productId: number) => {
-    ProductModel.delete({
+    return ProductModel.delete({
         where: {
             id: productId
         }
