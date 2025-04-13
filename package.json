@@ -18,7 +18,7 @@
     "test": "jest",
     "dev": "nodemon -r tsconfig-paths/register src/server.ts",
     "build": "tsc",
-    "postinstall": "prisma generate",
+    "postinstall": "npm install --save-dev @types/node && prisma generate",
     "start": "node dist/server.js"
   },
   "dependencies": {
