@@ -4,7 +4,7 @@ import { CREATED, OK } from "@/config/http";
 
 export const allProducts = async (req: Request, res: Response) => {
     const data = await productService.getAllProducts();
-    res.status(OK).json({data});
+    res.status(OK).json({"message": "FUCK!"});
 }
 
 export const oneProduct = async (req: Request, res: Response) => {

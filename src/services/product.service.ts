@@ -1,4 +1,5 @@
 import { ProductModel } from "@/models/product.model";
+import { productUpdateData } from "@/types/product.types"
 
 // getAllProducts, createProduct, updateProduct, deleteProduct, 
 

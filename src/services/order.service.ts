@@ -1,7 +1,20 @@
-// import { OrderModel } from "@/models/order.model";
+import { OrderModel } from "@/models/order.model";
+import { OrderItem, OrderStatus } from "@/types/order.types"
 
-// const createOrder = async (userId: number, { products, totalAmount}: any) => {
-//     return await OrderModel.create({
-//         data: { userId, products, totalAmount }
-//     })
-// };
+export const createOrder = async (userId: number, items: OrderItem[], totalAmount: number, status: OrderStatus, addressId: number) => {
+    return OrderModel.create({
+        data: {
+            userId,
+            items: {
+                create: items.map(item => ({
+                    productId: item.productId!,
+                    quantity: item.quantity!,
+                    price: item.price!,
+                }))
+            },
+            totalAmount,
+            status,
+            addressId
+        }
+    })
+}

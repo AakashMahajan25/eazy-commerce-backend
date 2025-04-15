@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Health Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 20px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .status-healthy {
+            background-color: #2ecc71;
+        }
+        .status-warning {
+            background-color: #f39c12;
+        }
+        .status-critical {
+            background-color: #e74c3c;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #34495e;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .metric:last-child {
+            border-bottom: none;
+        }
+        .metric-name {
+            font-weight: 500;
+        }
+        .metric-value {
+            font-family: monospace;
+            font-size: 16px;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+        .fill-warning {
+            background-color: #f39c12;
+        }
+        .fill-critical {
+            background-color: #e74c3c;
+        }
+        .timestamp {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .service-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .service-item {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .service-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 15px;
+            }
+            .service-item {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>System Health Dashboard</h1>
+            <div>
+                <span class="status-indicator" id="overall-status"></span>
+                <span id="overall-status-text">Checking status...</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">System Overview</div>
+            <div class="card-body">
+                <div class="metric">
+                    <span class="metric-name">Hostname</span>
+                    <span class="metric-value" id="hostname">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Uptime</span>
+                    <span class="metric-value" id="uptime">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Platform</span>
+                    <span class="metric-value" id="platform">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Load Average</span>
+                    <span class="metric-value" id="loadavg">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Memory Usage</div>
+            <div class="card-body">
+                <div class="metric">
+                    <span class="metric-name">Total Memory</span>
+                    <span class="metric-value" id="total-memory">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Free Memory</span>
+                    <span class="metric-value" id="free-memory">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Used Memory</span>
+                    <div style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span id="used-memory-percent">Loading...</span>
+                            <span id="used-memory">Loading...</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="memory-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">CPU Information</div>
+            <div class="card-body">
+                <div class="metric">
+                    <span class="metric-name">CPU Model</span>
+                    <span class="metric-value" id="cpu-model">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">CPU Cores</span>
+                    <span class="metric-value" id="cpu-cores">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">CPU Usage</span>
+                    <div style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span id="cpu-usage-percent">Loading...</span>
+                            <span>&nbsp;</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="cpu-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Disk Usage</div>
+            <div class="card-body">
+                <div class="metric">
+                    <span class="metric-name">Total Disk Space</span>
+                    <span class="metric-value" id="total-disk">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Free Disk Space</span>
+                    <span class="metric-value" id="free-disk">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Used Disk Space</span>
+                    <div style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span id="used-disk-percent">Loading...</span>
+                            <span id="used-disk">Loading...</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="disk-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Services Status</div>
+            <div class="card-body">
+                <div class="service-status" id="services-container">
+                    <div class="service-item">
+                        <div class="service-name">API Server</div>
+                        <div>
+                            <span class="status-indicator status-healthy"></span>
+                            <span>Healthy</span>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-name">Database</div>
+                        <div>
+                            <span class="status-indicator status-healthy"></span>
+                            <span>Healthy</span>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-name">Cache</div>
+                        <div>
+                            <span class="status-indicator status-healthy"></span>
+                            <span>Healthy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timestamp">
+            Last updated: <span id="last-updated">Loading...</span>
+        </div>
+
+        <div class="footer">
+            Health Check Dashboard | <span id="app-version">v1.0.0</span>
+        </div>
+    </div>
+
+    <script>
+        // Format bytes to human-readable format
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        // Format uptime seconds to days, hours, minutes, seconds
+        function formatUptime(seconds) {
+            const days = Math.floor(seconds / (3600 * 24));
+            seconds -= days * 3600 * 24;
+            const hrs = Math.floor(seconds / 3600);
+            seconds -= hrs * 3600;
+            const mins = Math.floor(seconds / 60);
+            seconds -= mins * 60;
+            
+            let result = '';
+            if (days > 0) result += days + 'd ';
+            if (hrs > 0 || days > 0) result += hrs + 'h ';
+            if (mins > 0 || hrs > 0 || days > 0) result += mins + 'm ';
+            result += Math.round(seconds) + 's';
+            
+            return result;
+        }
+
+        function updateProgressBar(elementId, percentage) {
+            const element = document.getElementById(elementId);
+            element.style.width = percentage + '%';
+            
+            // Add color based on percentage
+            if (percentage > 90) {
+                element.className = 'progress-fill fill-critical';
+            } else if (percentage > 70) {
+                element.className = 'progress-fill fill-warning';
+            } else {
+                element.className = 'progress-fill';
+            }
+        }
+
+        function updateSystemStatus() {
+            const lastUpdated = document.getElementById('last-updated');
+            lastUpdated.textContent = new Date().toLocaleString();
+            
+            fetch('http://localhost:3000/api/health')
+                .then(response => response.json())
+                .then(data => {
+                    // Update system overview
+                    document.getElementById('hostname').textContent = data.hostname;
+                    document.getElementById('uptime').textContent = formatUptime(data.uptime);
+                    document.getElementById('platform').textContent = data.platform;
+                    document.getElementById('loadavg').textContent = data.loadAverage.join(', ');
+                    
+                    // Update memory usage
+                    document.getElementById('total-memory').textContent = formatBytes(data.memory.total);
+                    document.getElementById('free-memory').textContent = formatBytes(data.memory.free);
+                    document.getElementById('used-memory').textContent = formatBytes(data.memory.used);
+                    
+                    const memoryUsagePercent = Math.round((data.memory.used / data.memory.total) * 100);
+                    document.getElementById('used-memory-percent').textContent = memoryUsagePercent + '%';
+                    updateProgressBar('memory-bar', memoryUsagePercent);
+                    
+                    // Update CPU information
+                    document.getElementById('cpu-model').textContent = data.cpu.model;
+                    document.getElementById('cpu-cores').textContent = data.cpu.cores;
+                    document.getElementById('cpu-usage-percent').textContent = data.cpu.usage + '%';
+                    updateProgressBar('cpu-bar', data.cpu.usage);
+                    
+                    // Update disk usage
+                    document.getElementById('total-disk').textContent = formatBytes(data.disk.total);
+                    document.getElementById('free-disk').textContent = formatBytes(data.disk.free);
+                    document.getElementById('used-disk').textContent = formatBytes(data.disk.used);
+                    
+                    const diskUsagePercent = Math.round((data.disk.used / data.disk.total) * 100);
+                    document.getElementById('used-disk-percent').textContent = diskUsagePercent + '%';
+                    updateProgressBar('disk-bar', diskUsagePercent);
+                    
+                    // Update services status
+                    if (data.services && Array.isArray(data.services)) {
+                        const servicesContainer = document.getElementById('services-container');
+                        servicesContainer.innerHTML = '';
+                        
+                        data.services.forEach(service => {
+                            const serviceItem = document.createElement('div');
+                            serviceItem.className = 'service-item';
+                            
+                            const serviceName = document.createElement('div');
+                            serviceName.className = 'service-name';
+                            serviceName.textContent = service.name;
+                            
+                            const statusContainer = document.createElement('div');
+                            const statusIndicator = document.createElement('span');
+                            statusIndicator.className = 'status-indicator';
+                            
+                            let statusClass = 'status-healthy';
+                            if (service.status === 'warning') {
+                                statusClass = 'status-warning';
+                            } else if (service.status === 'critical') {
+                                statusClass = 'status-critical';
+                            }
+                            
+                            statusIndicator.classList.add(statusClass);
+                            
+                            const statusText = document.createElement('span');
+                            statusText.textContent = service.status.charAt(0).toUpperCase() + service.status.slice(1);
+                            
+                            statusContainer.appendChild(statusIndicator);
+                            statusContainer.appendChild(statusText);
+                            
+                            serviceItem.appendChild(serviceName);
+                            serviceItem.appendChild(statusContainer);
+                            
+                            servicesContainer.appendChild(serviceItem);
+                        });
+                    }
+                    
+                    // Update overall status
+                    const overallStatus = document.getElementById('overall-status');
+                    const overallStatusText = document.getElementById('overall-status-text');
+                    
+                    if (data.status === 'healthy') {
+                        overallStatus.className = 'status-indicator status-healthy';
+                        overallStatusText.textContent = 'All Systems Operational';
+                    } else if (data.status === 'warning') {
+                        overallStatus.className = 'status-indicator status-warning';
+                        overallStatusText.textContent = 'Some Issues Detected';
+                    } else {
+                        overallStatus.className = 'status-indicator status-critical';
+                        overallStatusText.textContent = 'Critical Issues Detected';
+                    }
+                    
+                    // Update app version
+                    if (data.version) {
+                        document.getElementById('app-version').textContent = 'v' + data.version;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching health check data:', error);
+                    document.getElementById('overall-status').className = 'status-indicator status-critical';
+                    document.getElementById('overall-status-text').textContent = 'Unable to fetch health data';
+                });
+        }
+
+        // Initial update
+        updateSystemStatus();
+        
+        // Refresh data every 30 seconds
+        setInterval(updateSystemStatus, 30000);
+    </script>
+</body>
+</html>

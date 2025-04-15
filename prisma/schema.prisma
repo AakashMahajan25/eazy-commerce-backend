@@ -14,6 +14,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//enums
+enum Role {
+  user
+  admin
+}
+
+enum OrderStatus {
+  pending
+  processing
+  shipped
+  delivered
+  cancelled
+}
+
 //Models
 model User {
   id Int @id @default(autoincrement())
@@ -21,7 +35,7 @@ model User {
   email String @unique
   password String
   phone String?
-  role String @default("user")
+  role Role @default(user)
   addresses Address[]
   orders Order[]
   cart Cart?
@@ -105,7 +119,7 @@ model Order {
   userId Int
   items OrderItem[]
   totalAmount Float
-  status String @default("pending")
+  status OrderStatus @default(pending)
   addressId Int
   address Address @relation(fields: [addressId], references: [id])
   createdAt DateTime @default(now())
