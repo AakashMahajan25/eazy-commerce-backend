@@ -14,8 +14,11 @@ import router from '@/api/routes';
 import rateLimiter from '@/middlewares/rateLimiter'
 // import { errorHandler } from './middlewares/errorHandler';
 // import { errorHandler } from '@/middlewares/errorHandler';
+import { NODE_ENV } from '@/config/env';
 
 const app = express();
+
+const isProduction = NODE_ENV === 'production';
 
 app.use(cors({
   origin: '*', // For development, or specify your frontend URL
@@ -37,6 +40,7 @@ app.use(helmet(
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
+        connectSrc: ["'self'", isProduction ? "https://your-production-domain.com" : "http://localhost:3000"]
       },
     }
   }
